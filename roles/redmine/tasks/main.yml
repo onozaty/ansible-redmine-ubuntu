@@ -1,0 +1,50 @@
+- name: Install dependencies
+  yum:
+    name: 
+      - subversion
+
+- name: Checkout Redmine code
+  subversion:
+    repo: "{{redmine_repo}}"
+    dest: "{{redmine_dir}}"
+
+- name: Add database.yml
+  template:
+    src: database.yml.j2
+    dest: "{{redmine_dir}}/config/database.yml"
+
+- name: Add configuration.yml
+  template:
+    src: configuration.yml.j2
+    dest: "{{redmine_dir}}/config/configuration.yml"
+
+- name: Install bundler
+  gem:
+    name: bundler
+    executable: "{{gem_path}}"
+    user_install: no
+
+- name: Bundle config pg
+  shell: $0 -lc "bundle config build.pg -- --with-pg-dir=/usr/pgsql-{{postgresql_version}}"
+  args:
+    chdir: "{{redmine_dir}}"
+
+- name: Install gems
+  shell: $0 -lc "bundle install --path vendor/bundle"
+  args:
+    chdir: "{{redmine_dir}}"
+
+- name: generate_secret_token
+  shell: $0 -lc "bundle exec rake generate_secret_token"
+  args:
+    chdir: "{{redmine_dir}}"
+
+- name: DB Migration
+  shell: $0 -lc "RAILS_ENV=production bundle exec rake db:migrate"
+  args:
+    chdir: "{{redmine_dir}}"
+
+- name: DB Migration(test)
+  shell: $0 -lc "RAILS_ENV=test bundle exec rake db:migrate"
+  args:
+    chdir: "{{redmine_dir}}"

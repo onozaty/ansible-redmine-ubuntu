@@ -1,0 +1,53 @@
+- name: Install dependencies
+  yum:
+    name: 
+      - gcc-c++
+      - openssl-devel
+      - readline-devel
+      - zlib-devel
+      - curl-devel
+      - libyaml-devel
+      - libffi-devel
+
+- name: Install httpd
+  yum:
+    name: 
+      - httpd
+      - httpd-devel
+
+- name: Install passenger
+  gem:
+    name: passenger
+    executable: "{{gem_path}}"
+    user_install: no
+
+- name: Install passenger apache2 module
+  shell: $0 -lc "passenger-install-apache2-module --auto"
+  args:
+    creates: /etc/httpd/conf.d/redmine.conf
+
+- name: Get passenger apache2 module snippet
+  shell: $0 -lc "passenger-install-apache2-module --snippet"
+  register: passenger_snippet
+
+- name: Add redmine.conf
+  template:
+    src: redmine.conf.j2
+    dest: /etc/httpd/conf.d/redmine.conf
+
+- name: Change DocumentRoot
+  lineinfile:
+    state: present
+    dest: /etc/httpd/conf/httpd.conf
+    regexp: '^DocumentRoot'
+    line: DocumentRoot /var/lib/redmine/public
+    backup: yes
+
+- name: Change owner
+  shell: chown -R apache:apache /var/lib/redmine/
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+    enabled: yes

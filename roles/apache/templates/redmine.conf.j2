@@ -1,0 +1,13 @@
+<Directory "/var/lib/redmine/public">
+  Require all granted
+</Directory>
+
+{{passenger_snippet.stdout}}
+
+PassengerMaxPoolSize 20
+PassengerMaxInstancesPerApp 4
+PassengerPoolIdleTime 864000
+PassengerStatThrottleRate 10
+
+Header always unset "X-Powered-By"
+Header always unset "X-Runtime"

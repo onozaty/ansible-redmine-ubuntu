@@ -1,0 +1,18 @@
+# postgresql
+postgresql_version: 12
+postgresql_databases:
+  - name: redmine
+    owner: redmine
+  - name: redmine_test
+    owner: redmine
+
+postgresql_users:
+  - name: redmine
+    pass: redmine
+    role_attr_flags: CREATEDB
+
+# redmine
+db_username: redmine
+db_password: redmine
+
+redmine_repo: http://svn.redmine.org/redmine/tags/4.2.3/

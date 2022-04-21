@@ -1,0 +1,7 @@
+gem_path: /usr/local/rbenv/shims/gem
+redmine_repo: http://svn.redmine.org/redmine/trunk/
+redmine_dir: /var/lib/redmine
+rmagick_font_path: /usr/share/fonts/ipa-pgothic/ipagp.ttf
+db_username: redmine
+db_password: redmine
+postgresql_version: 12

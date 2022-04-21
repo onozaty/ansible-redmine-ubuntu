@@ -1,0 +1,23 @@
+- name: Add configuration to pg_hba.conf
+  become: yes
+  become_user: '{{postgresql_admin_user}}'
+  blockinfile:
+    dest: '{{postgresql_data_dir}}/pg_hba.conf'
+    insertafter: '^# TYPE'
+    content: |
+      {% for user in postgresql_users %}
+      local all {{user.name}} md5
+      host all {{user.name}} 0.0.0.0/0 md5
+      host all {{user.name}} ::0/0 md5
+      {% endfor %}
+
+- name: Add configuration to postgresql.conf
+  become: yes
+  become_user: '{{postgresql_admin_user}}'
+  blockinfile:
+    dest: '{{postgresql_data_dir}}/postgresql.conf'
+    content: |
+      listen_addresses = '*'
+
+- name: Restart PostgreSQL service
+  service: name={{postgresql_service_name}} state=restarted

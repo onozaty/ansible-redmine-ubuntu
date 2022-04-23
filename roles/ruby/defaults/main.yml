@@ -1,4 +1,4 @@
 rbenv_repo: https://github.com/rbenv/rbenv.git
 rbenv_root_dir: /usr/local/rbenv
 rbenv_ruby_build_repo: https://github.com/rbenv/ruby-build
-ruby_version: 2.5.8
+ruby_version: 3.0.4

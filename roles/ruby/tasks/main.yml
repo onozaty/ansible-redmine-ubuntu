@@ -18,14 +18,22 @@
     src: rbenv.sh.j2
     dest: /etc/profile.d/rbenv.sh
 
+# https://github.com/rbenv/ruby-build/wiki#ubuntudebianmint
 - name: Install dependencies
-  yum:
+  apt:
     name: 
-      - bzip2
-      - gcc
-      - openssl-devel
-      - readline-devel
-      - zlib-devel
+      - autoconf
+      - bison
+      - build-essential
+      - libssl-dev
+      - libyaml-dev
+      - libreadline6-dev
+      - zlib1g-dev
+      - libncurses5-dev
+      - libffi-dev
+      - libgdbm6
+      - libgdbm-dev
+      - libdb-dev
 
 - name: Install ruby
   shell: $0 -lc "rbenv install --skip-existing {{ruby_version}}"

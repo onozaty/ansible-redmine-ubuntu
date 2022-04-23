@@ -1,19 +1,20 @@
 - name: Install dependencies
-  yum:
-    name: 
-      - gcc-c++
-      - openssl-devel
-      - readline-devel
-      - zlib-devel
-      - curl-devel
-      - libyaml-devel
-      - libffi-devel
+  apt:
+    name:
+      - build-essential
+      - zlib1g-dev
+      - libssl-dev
+      - libreadline-dev
+      - libyaml-dev
+      - libcurl4-openssl-dev
+      - libffi-dev
+      - libpq-dev
 
 - name: Install httpd
-  yum:
+  apt:
     name: 
-      - httpd
-      - httpd-devel
+      - apache2
+      - apache2-dev
 
 - name: Install passenger
   gem:
@@ -22,9 +23,9 @@
     user_install: no
 
 - name: Install passenger apache2 module
-  shell: $0 -lc "passenger-install-apache2-module --auto"
+  shell: $0 -lc "passenger-install-apache2-module --auto --languages ruby"
   args:
-    creates: /etc/httpd/conf.d/redmine.conf
+    creates: /etc/apache2/conf-available/redmine.conf
 
 - name: Get passenger apache2 module snippet
   shell: $0 -lc "passenger-install-apache2-module --snippet"
@@ -33,21 +34,24 @@
 - name: Add redmine.conf
   template:
     src: redmine.conf.j2
-    dest: /etc/httpd/conf.d/redmine.conf
+    dest: /etc/apache2/conf-available/redmine.conf
+
+- name: Enable redmine.conf
+  shell: a2enconf redmine
 
 - name: Change DocumentRoot
   lineinfile:
     state: present
-    dest: /etc/httpd/conf/httpd.conf
-    regexp: '^DocumentRoot'
+    dest: /etc/apache2/sites-enabled/000-default.conf
+    regexp: 'DocumentRoot'
     line: DocumentRoot /var/lib/redmine/public
     backup: yes
 
 - name: Change owner
-  shell: chown -R apache:apache /var/lib/redmine/
+  shell: chown -R www-data:www-data /var/lib/redmine/
 
 - name: Restart httpd
   service:
-    name: httpd
+    name: apache2
     state: restarted
     enabled: yes

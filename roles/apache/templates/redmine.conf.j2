@@ -9,5 +9,8 @@ PassengerMaxInstancesPerApp 4
 PassengerPoolIdleTime 864000
 PassengerStatThrottleRate 10
 
-Header always unset "X-Powered-By"
-Header always unset "X-Runtime"
+<Directory /var/lib/redmine/public>
+    Allow from all
+    Options -MultiViews
+    Require all granted
+</Directory>

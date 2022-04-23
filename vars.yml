@@ -1,5 +1,5 @@
 # postgresql
-postgresql_version: 12
+postgresql_version: 14
 postgresql_databases:
   - name: redmine
     owner: redmine
@@ -15,4 +15,4 @@ postgresql_users:
 db_username: redmine
 db_password: redmine
 
-redmine_repo: http://svn.redmine.org/redmine/tags/4.2.3/
+redmine_repo: http://svn.redmine.org/redmine/tags/5.0.0/

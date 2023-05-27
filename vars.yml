@@ -1,5 +1,5 @@
 # postgresql
-postgresql_version: 14
+postgresql_version: 15
 postgresql_databases:
   - name: redmine
     owner: redmine
